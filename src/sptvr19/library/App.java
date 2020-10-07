@@ -8,6 +8,8 @@ package sptvr19.library;
 import entity.Book;
 import entity.Read;
 import java.util.Scanner;
+import tools.BookFactory;
+import tools.ReadFactory;
 
 /**
  *
@@ -30,7 +32,7 @@ class App {
             System.out.println("\u001B[36m(\u001B[35m4\u001B[36m) - Вывести списко читателей");
             System.out.println("\u001B[36m(\u001B[35m5\u001B[36m) - Выдать книгу читателю");
             System.out.println("\u001B[36m(\u001B[35m6\u001B[36m) - Вернуть книгу в библиотеку");
-            System.out.println("Выберите задачу:");
+            System.out.println("\u001B[35mВыберите задачу:\u001B[32m");
             Scanner input = new Scanner(System.in);
             String task = input.nextLine();
             switch (task) {
@@ -42,18 +44,13 @@ class App {
                     System.out.println("<--- Добавить новую книгу --->");
                     amountBook = amountBook + 1;
                     if (amountBook != 2 || amountBook < 2){
-                        System.out.print("Введите название кники: ");
-                        String bookName = input.nextLine();
-                        System.out.print("Введите Автора: ");
-                        String bookAuthor = input.nextLine();
-                        System.out.print("Введите год издание книги: ");
-                        Integer bookYear = input.nextInt();
-                        Book book = new Book(bookName, bookAuthor, bookYear);
-                        System.out.println("Добавлена книга: " + book.getName());
+                        Book book;          
+                        BookFactory bookFactory = new BookFactory();
+                        book = bookFactory.createBook();
                         books[amountBook] = book;
                     }
                     else{
-                        System.out.println("В библиотеке закончилось место.");
+                        System.out.println("\u001B[33mВ библиотеке закончилось место.\u001B[0m");
                     }
                     break;
 
@@ -61,7 +58,7 @@ class App {
                     System.out.println("<--- Cписок книг --->");
                     for (int i = 0; i < books.length; i++){
                         if(books[i] != null){
-                            System.out.printf("%3d. Название книги: %s%n     Автор: %s%n"
+                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mНазвание книги:\u001B[32m %s%n\u001B[0m     Автор:\u001B[32m %s%n"
                                     ,i+1
                                     ,books[i].getName()
                                     ,books[i].getAuthor());
@@ -72,14 +69,9 @@ class App {
                 case "3":
                     System.out.println("<--- Зарегестрировать пользователя --->");
                     amountReaders += 1;
-                    System.out.print("Введите имя: ");
-                    String name = input.nextLine();
-                    System.out.print("Введите фамилию: ");
-                    String surname = input.nextLine();
-                    System.out.print("Введите телефон: ");
-                    String phone = input.nextLine();
-                    Read read = new Read(name, surname, phone);
-                    System.out.println("Добавлен пользователь: " + read.getName() + " " + read.getSurname());
+                    Read read;
+                    ReadFactory readFactory = new ReadFactory();
+                    read = readFactory.createReader();
                     readers[amountReaders] = read;
                     break;
                 
@@ -87,7 +79,7 @@ class App {
                     System.out.println("<--- Список пользователей --->");
                     for (int i = 0; i < readers.length; i++){
                         if(readers[i] != null){
-                            System.out.println(readers[i].getName());
+                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mЧитатель: \u001B[32m%s %s%n", i+1, readers[i].getName(), readers[i].getSurname());
                         }
                     }
                     break;

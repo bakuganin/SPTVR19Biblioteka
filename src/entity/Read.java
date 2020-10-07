@@ -20,6 +20,10 @@ public class Read {
         this.numPhone = numPhone;
     }
 
+    public Read() {
+        
+    }
+
     public String getName() {
         return name;
     }
