@@ -5,11 +5,13 @@
  */
 package entity;
 
+import java.io.Serializable;
+
 /**
  *
- * @author user
+ * @author Jegor Bakunin
  */
-public class Read {
+public class Read implements Serializable {
     private String name;
     private String surname;
     private String numPhone;

@@ -9,17 +9,27 @@ import entity.Book;
 import entity.Read;
 import java.util.Scanner;
 import tools.BookFactory;
+import tools.BookSaver;
 import tools.ReadFactory;
+import tools.ReadSaver;
 
 /**
  *
- * @author user
+ * @author Jegor Bakunin
  */
 class App {
-    private Book[] books = new Book[2];
+    private Book[] books = new Book[100];
     private Read[] readers = new Read[10];
+    
+    public App() {
+        BookSaver bookSaver = new BookSaver();
+        books = bookSaver.loadFile(books);
+        ReadSaver readSaver = new ReadSaver();
+        readers = readSaver.loadFile(readers);
+    }
+    
     public void run() {
-        int amountBook = -1;
+        int amountBook = 0;
         int amountReaders = -1;
         boolean repeat = true;
         System.out.println("<--- Библиотека --->");
@@ -42,16 +52,22 @@ class App {
                     break;
                 case "1":
                     System.out.println("<--- Добавить новую книгу --->");
-                    amountBook = amountBook + 1;
-                    if (amountBook != 2 || amountBook < 2){
-                        Book book;          
-                        BookFactory bookFactory = new BookFactory();
-                        book = bookFactory.createBook();
-                        books[amountBook] = book;
+                    for(int i = 0; i < books.length; i++) {
+                        if (books[i] ==  null){
+                            Book book;          
+                            BookFactory bookFactory = new BookFactory();
+                            book = bookFactory.createBook();
+                            books[i] = book;
+                            System.out.printf("\u001B[0mДобавлена книга: \u001B[32m%s%n", books[i].getName());
+                            break;
+                        }
                     }
-                    else{
+                    if (books[99] != null){
                         System.out.println("\u001B[33mВ библиотеке закончилось место.\u001B[0m");
                     }
+
+                    BookSaver bookSaver = new BookSaver();
+                    bookSaver.saveBooks(books);
                     break;
 
                 case "2":
@@ -65,14 +81,22 @@ class App {
                         }
                     }
                     break;
-
+                    
                 case "3":
                     System.out.println("<--- Зарегестрировать пользователя --->");
-                    amountReaders += 1;
-                    Read read;
-                    ReadFactory readFactory = new ReadFactory();
-                    read = readFactory.createReader();
-                    readers[amountReaders] = read;
+                    for(int i = 0; i < readers.length; i++) {
+                        if (readers[i] ==  null){
+                            Read read;         
+                            ReadFactory readFactory = new ReadFactory();
+                            read = readFactory.createReader();
+                            readers[i] = read;
+                            System.out.printf("\u001B[0mДобавлена книга: \u001B[32m%s%n", readers[i].getName());
+                            break;
+                        }
+                    }
+                    
+                    ReadSaver readSaver = new ReadSaver();
+                    readSaver.saveReaders(readers);
                     break;
                 
                 case "4":

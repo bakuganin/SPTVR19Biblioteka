@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author user
+ * @author Jegor Bakunin
  */
 public class ReadFactory {
 

@@ -7,7 +7,7 @@ package sptvr19.library;
 
 /**
  *
- * @author user
+ * @author Jegor Bakunin
  */
 public class SPTVR19Library {
 
