@@ -6,10 +6,14 @@
 package sptvr19.library;
 
 import entity.Book;
+import entity.History;
 import entity.Read;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 import tools.BookFactory;
 import tools.BookSaver;
+import tools.HistorySaver;
 import tools.ReadFactory;
 import tools.ReadSaver;
 
@@ -19,13 +23,16 @@ import tools.ReadSaver;
  */
 class App {
     private Book[] books = new Book[100];
-    private Read[] readers = new Read[10];
+    private Read[] readers = new Read[100];
+    private History[] histories = new History[200];
     
     public App() {
         BookSaver bookSaver = new BookSaver();
         books = bookSaver.loadFile(books);
         ReadSaver readSaver = new ReadSaver();
         readers = readSaver.loadFile(readers);
+        HistorySaver historySaver = new HistorySaver();
+        histories = historySaver.loadFile(histories);
     }
     
     public void run() {
@@ -42,6 +49,7 @@ class App {
             System.out.println("\u001B[36m(\u001B[35m4\u001B[36m) - Вывести списко читателей");
             System.out.println("\u001B[36m(\u001B[35m5\u001B[36m) - Выдать книгу читателю");
             System.out.println("\u001B[36m(\u001B[35m6\u001B[36m) - Вернуть книгу в библиотеку");
+            System.out.println("\u001B[36m(\u001B[35m7\u001B[36m) - Список читаемых книг");
             System.out.println("\u001B[35mВыберите задачу:\u001B[32m");
             Scanner input = new Scanner(System.in);
             String task = input.nextLine();
@@ -110,10 +118,77 @@ class App {
                     
                 case "5":
                     System.out.println("<--- Выдача книги --->");
+                    System.out.println("<--- Список книг --->");
+                    for (int i = 0; i < books.length; i++){
+                        if(books[i] != null){
+                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mНазвание книги:\u001B[32m %s%n\u001B[0m     Автор:\u001B[32m %s%n"
+                                    ,i+1
+                                    ,books[i].getName()
+                                    ,books[i].getAuthor());
+                        }
+                    }
+                    System.out.println("Выберите номер книги: ");
+                    int bookNumber = input.nextInt();
+                    Book book = books[bookNumber - 1];
+                    System.out.println("<--- Список пользователей --->");
+                    for (int i = 0; i < readers.length; i++){
+                        if(readers[i] != null){
+                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mЧитатель: \u001B[32m%s %s%n", i+1, readers[i].getName(), readers[i].getSurname());
+                        }
+                    }
+//                    Read reader = new Read();
+                    int readerNumber = input.nextInt();
+                    Read reader = readers[readerNumber - 1];
+                    Calendar c = new GregorianCalendar();
+                    c.getTime();
+                    History history = new History();
+                    history.setBook(book);
+                    history.setReader(reader);
+                    history.setTakeOnDate(c.getTime());
+                    for (int i = 0; i < histories.length; i++){
+                        if(histories[i] == null){
+                            histories[i] = history;
+                            break;
+                        }
+                    }
+                    HistorySaver historySaver = new HistorySaver();
+                    historySaver.saveHistories(histories);
+                    System.out.println("Читателю " + history.getReader().getSurname() + " выдана книга " + history.getBook().getName());
                     break;
 
                 case "6":
                     System.out.println("<--- Вернуть книгу в библиотеку --->");
+                    System.out.println("<--- Список читаемых книг --->");
+                    for(int i = 0; i < histories.length; i++){
+                        if(histories[i] != null 
+                                && histories[i].getReturnDate() == null){
+                            System.out.printf("\u001B[0m%d. Книгу \"%s\" читает %s %s%n",
+                                    i+1,
+                                    histories[i].getBook().getName(), 
+                                    histories[i].getReader().getName(), 
+                                    histories[i].getReader().getSurname());
+                        }
+                    }
+                    System.out.println("Выберите номер возращаемой книги: ");
+                    int historyNumber = input.nextInt();
+                    c = new GregorianCalendar();
+                    histories[(historyNumber - 1)].setReturnDate(c.getTime());
+                    historySaver = new HistorySaver();
+                    historySaver.saveHistories(histories);
+                    break;
+                    
+                case "7":
+                    System.out.println("<--- Список читаемых книг --->");
+                    for(int i = 0; i < histories.length; i++){
+                        if(histories[i] != null 
+                                && histories[i].getReturnDate() == null){
+                            System.out.printf("\u001B[0m%d. Книгу \"%s\" читает %s %s%n",
+                                    i+1,
+                                    histories[i].getBook().getName(), 
+                                    histories[i].getReader().getName(), 
+                                    histories[i].getReader().getSurname());
+                        }
+                    }
                     break;
 
                 default:
