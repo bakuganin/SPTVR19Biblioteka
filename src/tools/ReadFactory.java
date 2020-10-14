@@ -5,7 +5,7 @@
  */
 package tools;
 
-import entity.Read;
+import entity.Reader;
 import java.util.Scanner;
 
 /**
@@ -14,9 +14,9 @@ import java.util.Scanner;
  */
 public class ReadFactory {
 
-    public Read createReader() {
+    public Reader createReader() {
         Scanner input = new Scanner(System.in);
-        Read read = new Read();
+        Reader read = new Reader();
         System.out.print("Введите имя: ");
         read.setName(input.nextLine());
         System.out.print("Введите фамилию: ");

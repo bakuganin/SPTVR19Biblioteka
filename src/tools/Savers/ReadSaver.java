@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tools;
+package tools.Savers;
 
 import entity.Book;
-import entity.Read;
+import entity.Reader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,7 +21,7 @@ import java.io.ObjectOutputStream;
 public class ReadSaver {
     private String fileName = "readers";
     
-   public void saveReaders(Read[] readers) {
+   public void saveReaders(Reader[] readers) {
         FileOutputStream fos  = null;
         ObjectOutputStream oos = null;
         try {
@@ -36,13 +36,13 @@ public class ReadSaver {
         }
     }
 
-    public Read[] loadFile(Read[] readers) {
+    public Reader[] loadFile(Reader[] readers) {
         FileInputStream fis  = null;
         ObjectInputStream ois = null;
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
-            return (Read[]) ois.readObject();
+            return (Reader[]) ois.readObject();
         } catch (FileNotFoundException ex) {
             System.out.println("Файл не найден!");
         } catch (IOException ex) {
@@ -50,7 +50,7 @@ public class ReadSaver {
         } catch (ClassNotFoundException ex) {
             System.out.println("Класс не найден!");
         }
-        return new Read[100];
+        return new Reader[100];
         
     }
     

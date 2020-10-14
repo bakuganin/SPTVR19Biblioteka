@@ -14,14 +14,14 @@ import java.util.Date;
  */
 public class History implements Serializable{
     private Book book;
-    private Read reader;
+    private Reader reader;
     private Date takeOnDate;
     private Date returnDate;
 
     public History() {
     }
 
-    public History(Book book, Read reader, Date takeOnDate, Date returnDate) {
+    public History(Book book, Reader reader, Date takeOnDate, Date returnDate) {
         this.book = book;
         this.reader = reader;
         this.takeOnDate = takeOnDate;
@@ -36,11 +36,11 @@ public class History implements Serializable{
         this.book = book;
     }
 
-    public Read getReader() {
+    public Reader getReader() {
         return reader;
     }
 
-    public void setReader(Read reader) {
+    public void setReader(Reader reader) {
         this.reader = reader;
     }
 

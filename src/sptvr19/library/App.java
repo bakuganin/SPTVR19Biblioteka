@@ -5,17 +5,22 @@
  */
 package sptvr19.library;
 
+
+import tools.Managers.HistoryManager;
+import tools.BookRead;
 import entity.Book;
 import entity.History;
-import entity.Read;
+import entity.Reader;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 import tools.BookFactory;
-import tools.BookSaver;
-import tools.HistorySaver;
+import tools.Savers.BookSaver;
+import tools.Savers.HistorySaver;
 import tools.ReadFactory;
-import tools.ReadSaver;
+import tools.Savers.ReadSaver;
+import tools.Managers.BookManager;
+import tools.Managers.ReaderManager;
 
 /**
  *
@@ -23,9 +28,10 @@ import tools.ReadSaver;
  */
 class App {
     private Book[] books = new Book[100];
-    private Read[] readers = new Read[100];
+    private Reader[] readers = new Reader[100];
     private History[] histories = new History[200];
-    
+    BookManager man = new BookManager();
+    ReaderManager readerManager = new ReaderManager(); 
     public App() {
         BookSaver bookSaver = new BookSaver();
         books = bookSaver.loadFile(books);
@@ -60,48 +66,21 @@ class App {
                     break;
                 case "1":
                     System.out.println("<--- Добавить новую книгу --->");
-                    for(int i = 0; i < books.length; i++) {
-                        if (books[i] ==  null){
-                            Book book;          
-                            BookFactory bookFactory = new BookFactory();
-                            book = bookFactory.createBook();
-                            books[i] = book;
-                            System.out.printf("\u001B[0mДобавлена книга: \u001B[32m%s%n", books[i].getName());
-                            break;
-                        }
-                    }
-                    if (books[99] != null){
-                        System.out.println("\u001B[33mВ библиотеке закончилось место.\u001B[0m");
-                    }
-
+                    Book book = man.createBook();
+                    man.addBook(book, books);
                     BookSaver bookSaver = new BookSaver();
                     bookSaver.saveBooks(books);
                     break;
 
                 case "2":
                     System.out.println("<--- Cписок книг --->");
-                    for (int i = 0; i < books.length; i++){
-                        if(books[i] != null){
-                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mНазвание книги:\u001B[32m %s%n\u001B[0m     Автор:\u001B[32m %s%n"
-                                    ,i+1
-                                    ,books[i].getName()
-                                    ,books[i].getAuthor());
-                        }
-                    }
+                    man.printBooksList(books);
                     break;
                     
                 case "3":
                     System.out.println("<--- Зарегестрировать пользователя --->");
-                    for(int i = 0; i < readers.length; i++) {
-                        if (readers[i] ==  null){
-                            Read read;         
-                            ReadFactory readFactory = new ReadFactory();
-                            read = readFactory.createReader();
-                            readers[i] = read;
-                            System.out.printf("\u001B[0mДобавлена книга: \u001B[32m%s%n", readers[i].getName());
-                            break;
-                        }
-                    }
+                    Reader reader = new Reader();
+                    readerManager.addReader(reader, readers);
                     
                     ReadSaver readSaver = new ReadSaver();
                     readSaver.saveReaders(readers);
@@ -109,48 +88,31 @@ class App {
                 
                 case "4":
                     System.out.println("<--- Список пользователей --->");
-                    for (int i = 0; i < readers.length; i++){
-                        if(readers[i] != null){
-                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mЧитатель: \u001B[32m%s %s%n", i+1, readers[i].getName(), readers[i].getSurname());
-                        }
-                    }
+                    readerManager.printReadersList(readers);
                     break;
                     
                 case "5":
                     System.out.println("<--- Выдача книги --->");
+                    HistoryManager historyManager = new HistoryManager();
+                    
                     System.out.println("<--- Список книг --->");
-                    for (int i = 0; i < books.length; i++){
-                        if(books[i] != null){
-                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mНазвание книги:\u001B[32m %s%n\u001B[0m     Автор:\u001B[32m %s%n"
-                                    ,i+1
-                                    ,books[i].getName()
-                                    ,books[i].getAuthor());
-                        }
-                    }
+                    man.printBooksList(books);
+                    
                     System.out.println("Выберите номер книги: ");
                     int bookNumber = input.nextInt();
-                    Book book = books[bookNumber - 1];
+                    Book book1 = books[bookNumber - 1];
                     System.out.println("<--- Список пользователей --->");
-                    for (int i = 0; i < readers.length; i++){
-                        if(readers[i] != null){
-                            System.out.printf("\u001B[36m%3d\u001B[35m. \u001B[0mЧитатель: \u001B[32m%s %s%n", i+1, readers[i].getName(), readers[i].getSurname());
-                        }
-                    }
-//                    Read reader = new Read();
+                    readerManager.printReadersList(readers);
                     int readerNumber = input.nextInt();
-                    Read reader = readers[readerNumber - 1];
+                    Reader reader1 = readers[readerNumber - 1];
                     Calendar c = new GregorianCalendar();
                     c.getTime();
                     History history = new History();
-                    history.setBook(book);
-                    history.setReader(reader);
+                    history.setBook(book1);
+                    history.setReader(reader1);
                     history.setTakeOnDate(c.getTime());
-                    for (int i = 0; i < histories.length; i++){
-                        if(histories[i] == null){
-                            histories[i] = history;
-                            break;
-                        }
-                    }
+                    HistoryManager.addHistory(history, histories);
+
                     HistorySaver historySaver = new HistorySaver();
                     historySaver.saveHistories(histories);
                     System.out.println("Читателю " + history.getReader().getSurname() + " выдана книга " + history.getBook().getName());
@@ -159,16 +121,7 @@ class App {
                 case "6":
                     System.out.println("<--- Вернуть книгу в библиотеку --->");
                     System.out.println("<--- Список читаемых книг --->");
-                    for(int i = 0; i < histories.length; i++){
-                        if(histories[i] != null 
-                                && histories[i].getReturnDate() == null){
-                            System.out.printf("\u001B[0m%d. Книгу \"%s\" читает %s %s%n",
-                                    i+1,
-                                    histories[i].getBook().getName(), 
-                                    histories[i].getReader().getName(), 
-                                    histories[i].getReader().getSurname());
-                        }
-                    }
+                    man.printBooksList(books);
                     System.out.println("Выберите номер возращаемой книги: ");
                     int historyNumber = input.nextInt();
                     c = new GregorianCalendar();
@@ -179,16 +132,8 @@ class App {
                     
                 case "7":
                     System.out.println("<--- Список читаемых книг --->");
-                    for(int i = 0; i < histories.length; i++){
-                        if(histories[i] != null 
-                                && histories[i].getReturnDate() == null){
-                            System.out.printf("\u001B[0m%d. Книгу \"%s\" читает %s %s%n",
-                                    i+1,
-                                    histories[i].getBook().getName(), 
-                                    histories[i].getReader().getName(), 
-                                    histories[i].getReader().getSurname());
-                        }
-                    }
+                    BookRead bookRead = new BookRead();
+                    bookRead.printListReadBooks(histories);
                     break;
 
                 default:

@@ -3,33 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tools;
+package tools.Savers;
 
 import entity.Book;
-import entity.History;
-import entity.Read;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Jegor Bakunin
  */
-public class HistorySaver implements Serializable {
-    private String fileName = "Historie";
+public class BookSaver {
+    private String fileName = "books";
     
-   public void saveHistories(History[] histories) {
+    public void saveBooks(Book[] books) {
         FileOutputStream fos  = null;
         ObjectOutputStream oos = null;
         try {
             fos = new FileOutputStream(fileName);
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(histories);
+            oos.writeObject(books);
             oos.flush();
         } catch (FileNotFoundException ex) {
             System.out.println("Файл не найден!");
@@ -38,13 +37,13 @@ public class HistorySaver implements Serializable {
         }
     }
 
-    public History[] loadFile(History[] histories) {
+    public Book[] loadFile(Book[] books) {
         FileInputStream fis  = null;
         ObjectInputStream ois = null;
         try {
             fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
-            return (History[]) ois.readObject();
+            return (Book[]) ois.readObject();
         } catch (FileNotFoundException ex) {
             System.out.println("Файл не найден!");
         } catch (IOException ex) {
@@ -52,7 +51,7 @@ public class HistorySaver implements Serializable {
         } catch (ClassNotFoundException ex) {
             System.out.println("Класс не найден!");
         }
-        return new History[100];
+        return new Book[100];
         
     }
     

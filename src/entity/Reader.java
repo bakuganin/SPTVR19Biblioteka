@@ -11,18 +11,18 @@ import java.io.Serializable;
  *
  * @author Jegor Bakunin
  */
-public class Read implements Serializable {
+public class Reader implements Serializable {
     private String name;
     private String surname;
     private String numPhone;
 
-    public Read(String name, String surname, String numPhone) {
+    public Reader(String name, String surname, String numPhone) {
         this.name = name;
         this.surname = surname;
         this.numPhone = numPhone;
     }
 
-    public Read() {
+    public Reader() {
         
     }
 
